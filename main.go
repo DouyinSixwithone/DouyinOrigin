@@ -1,16 +1,31 @@
 package main
 
 import (
-	"github.com/RaymondCode/simple-demo/service"
+	"Douyin/config"
+	"Douyin/repository"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	go service.RunMessageServer()
-
+	if err := Initial(); err != nil {
+		panic(err)
+	}
 	r := gin.Default()
-
 	initRouter(r)
+	err := r.Run() // listen and serve on localhost:8080
+	if err != nil {
+		panic(err)
+	}
+}
 
-	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+func Initial() error {
+	//go message.RunMessageServer()
+	if err := config.Init(); err != nil {
+		return err
+	}
+	if err := repository.Init(); err != nil {
+		return err
+	}
+
+	return nil
 }

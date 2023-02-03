@@ -1,6 +1,8 @@
-package controller
+package publish
 
 import (
+	"Douyin/controller"
+	"Douyin/controller/user"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -8,22 +10,22 @@ import (
 )
 
 type VideoListResponse struct {
-	Response
-	VideoList []Video `json:"video_list"`
+	controller.Response
+	VideoList []controller.Video `json:"video_list"`
 }
 
-// Publish check token then save upload file to public directory
+// Publish check token then save upload file to data directory
 func Publish(c *gin.Context) {
 	token := c.PostForm("token")
 
-	if _, exist := usersLoginInfo[token]; !exist {
-		c.JSON(http.StatusOK, Response{StatusCode: 1, StatusMsg: "User doesn't exist"})
+	if _, exist := user.UsersLoginInfo[token]; !exist {
+		c.JSON(http.StatusOK, controller.Response{StatusCode: 1, StatusMsg: "User doesn't exist"})
 		return
 	}
 
 	data, err := c.FormFile("data")
 	if err != nil {
-		c.JSON(http.StatusOK, Response{
+		c.JSON(http.StatusOK, controller.Response{
 			StatusCode: 1,
 			StatusMsg:  err.Error(),
 		})
@@ -31,18 +33,18 @@ func Publish(c *gin.Context) {
 	}
 
 	filename := filepath.Base(data.Filename)
-	user := usersLoginInfo[token]
+	user := user.UsersLoginInfo[token]
 	finalName := fmt.Sprintf("%d_%s", user.Id, filename)
-	saveFile := filepath.Join("./public/", finalName)
+	saveFile := filepath.Join("./data/", finalName)
 	if err := c.SaveUploadedFile(data, saveFile); err != nil {
-		c.JSON(http.StatusOK, Response{
+		c.JSON(http.StatusOK, controller.Response{
 			StatusCode: 1,
 			StatusMsg:  err.Error(),
 		})
 		return
 	}
 
-	c.JSON(http.StatusOK, Response{
+	c.JSON(http.StatusOK, controller.Response{
 		StatusCode: 0,
 		StatusMsg:  finalName + " uploaded successfully",
 	})
@@ -51,9 +53,9 @@ func Publish(c *gin.Context) {
 // PublishList all users have same publish video list
 func PublishList(c *gin.Context) {
 	c.JSON(http.StatusOK, VideoListResponse{
-		Response: Response{
+		Response: controller.Response{
 			StatusCode: 0,
 		},
-		VideoList: DemoVideos,
+		VideoList: controller.DemoVideos,
 	})
 }
