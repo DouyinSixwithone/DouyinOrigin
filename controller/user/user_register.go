@@ -1,41 +1,39 @@
 package user
 
 import (
-	"Douyin/controller"
+	"Douyin/common"
+	"Douyin/service/user"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"sync/atomic"
 )
 
-var userIdSequence = int64(1)
-
 type RegisterResponse struct {
-	controller.Response
-	UserId int64  `json:"user_id,omitempty"`
-	Token  string `json:"token"`
+	common.Response
+	user.RegisterInfo
 }
 
 func Register(c *gin.Context) {
+
+	// 参数提取部分
 	username := c.Query("username")
 	password := c.Query("password")
 
-	token := username + password
+	// 调用service层得到响应
+	registerInfo, err := user.GetRegisterInfo(username, password)
 
-	if _, exist := UsersLoginInfo[token]; exist {
-		c.JSON(http.StatusOK, LoginResponse{
-			Response: controller.Response{StatusCode: 1, StatusMsg: "User already exist"},
+	// 将调用service层得到的Info与Response打包，返回响应
+	if err != nil {
+		c.JSON(http.StatusOK, RegisterResponse{
+			Response: common.Response{
+				StatusCode: 1,
+				StatusMsg:  err.Error(),
+			},
 		})
-	} else {
-		atomic.AddInt64(&userIdSequence, 1)
-		newUser := controller.User{
-			Id:   userIdSequence,
-			Name: username,
-		}
-		UsersLoginInfo[token] = newUser
-		c.JSON(http.StatusOK, LoginResponse{
-			Response: controller.Response{StatusCode: 0},
-			UserId:   userIdSequence,
-			Token:    username + password,
-		})
+		return
 	}
+	c.JSON(http.StatusOK, RegisterResponse{
+		Response:     common.Response{StatusCode: 0},
+		RegisterInfo: registerInfo,
+	})
+	return
 }

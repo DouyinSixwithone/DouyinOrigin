@@ -5,6 +5,7 @@ import (
 	"Douyin/middleware/redis"
 	"Douyin/repository"
 	"Douyin/router"
+	"Douyin/service/message"
 	"github.com/gin-gonic/gin"
 )
 
@@ -23,7 +24,8 @@ func main() {
 
 // 根据配置文件初始化数据库和redis
 func initial() error {
-	//go message.RunMessageServer()
+	go message.RunMessageServer() // 这一行是demo里自带的，可能写message的部分会用到
+
 	if err := config.Init(); err != nil {
 		return err
 	}

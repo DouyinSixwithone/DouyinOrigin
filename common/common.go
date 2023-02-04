@@ -1,4 +1,6 @@
-package controller
+package common
+
+// 该文件为demo自带，修改时请注意调用关系
 
 type Response struct {
 	StatusCode int32  `json:"status_code"`

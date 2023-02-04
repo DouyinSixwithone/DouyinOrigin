@@ -1,20 +1,20 @@
 package user
 
 import (
-	"Douyin/controller"
+	"Douyin/common"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 type UserResponse struct {
-	controller.Response
-	User controller.User `json:"user"`
+	common.Response
+	User common.User `json:"user"`
 }
 
 // UsersLoginInfo use map to store user info, and key is username+password for demo
 // user data will be cleared every time the server starts
 // test data: username=zhanglei, password=douyin
-var UsersLoginInfo = map[string]controller.User{
+var UsersLoginInfo = map[string]common.User{
 	"zhangleidouyin": {
 		Id:            1,
 		Name:          "zhanglei",
@@ -29,12 +29,12 @@ func UserInfo(c *gin.Context) {
 
 	if user, exist := UsersLoginInfo[token]; exist {
 		c.JSON(http.StatusOK, UserResponse{
-			Response: controller.Response{StatusCode: 0},
+			Response: common.Response{StatusCode: 0},
 			User:     user,
 		})
 	} else {
 		c.JSON(http.StatusOK, UserResponse{
-			Response: controller.Response{StatusCode: 1, StatusMsg: "User doesn't exist"},
+			Response: common.Response{StatusCode: 1, StatusMsg: "User doesn't exist"},
 		})
 	}
 }
