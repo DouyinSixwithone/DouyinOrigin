@@ -1,16 +1,38 @@
 package main
 
 import (
-	"github.com/RaymondCode/simple-demo/service"
+	"Douyin/config"
+	"Douyin/middleware/redis"
+	"Douyin/repository"
+	"Douyin/router"
+	"Douyin/service/message"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	go service.RunMessageServer()
+	if err := initial(); err != nil {
+		panic(err)
+	}
 
 	r := gin.Default()
+	router.Init(r)
+	err := r.Run() // listen and serve on localhost:8080
+	if err != nil {
+		panic(err)
+	}
+}
 
-	initRouter(r)
+// 根据配置文件初始化数据库和redis
+func initial() error {
+	go message.RunMessageServer() // 这一行是demo里自带的，可能写message的部分会用到
 
-	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	if err := config.Init(); err != nil {
+		return err
+	}
+	if err := repository.Init(); err != nil {
+		return err
+	}
+	redis.Init()
+
+	return nil
 }

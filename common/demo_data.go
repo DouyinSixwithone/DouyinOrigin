@@ -1,4 +1,6 @@
-package controller
+package common
+
+// 该文件仅用于demo，相应接口实现后可将该文件中的内容删除
 
 var DemoVideos = []Video{
 	{
