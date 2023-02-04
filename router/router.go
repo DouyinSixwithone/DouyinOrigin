@@ -1,4 +1,4 @@
-package main
+package router
 
 import (
 	"Douyin/controller/comment"
@@ -11,7 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func initRouter(r *gin.Engine) {
+func Init(r *gin.Engine) {
 	// data directory is used to serve static resources
 	r.Static("/static", "./data")
 
