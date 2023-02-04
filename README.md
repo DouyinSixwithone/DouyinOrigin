@@ -89,9 +89,9 @@
 
    * 框架：gin、gorm
 
-   * 数据存储：Mysql、Redis
+   * 数据库：Mysql
 
-   * 其他：jwt
+   * 其他：Redis, jwt
 
 2. 采用 **repository → service → controller** 的分层结构：
 
