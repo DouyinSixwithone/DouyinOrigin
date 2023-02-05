@@ -21,7 +21,7 @@ type RegisterInfo struct {
 func GetRegisterInfo(username string, password string) (RegisterInfo, error) {
 
 	//1.合法性检验
-	err := checkParam(username, password)
+	err := checkRegister(username, password)
 	if err != nil {
 		return RegisterInfo{}, err
 	}
@@ -33,7 +33,7 @@ func GetRegisterInfo(username string, password string) (RegisterInfo, error) {
 	}
 
 	//3.获得token
-	token, err := jwt.CreateToken(id, username)
+	token, err := jwt.CreateToken(id)
 	if err != nil {
 		return RegisterInfo{}, err
 	}
@@ -44,10 +44,7 @@ func GetRegisterInfo(username string, password string) (RegisterInfo, error) {
 	}, nil
 }
 
-func checkParam(name string, pass string) error {
-	if repository.IsUserExistByName(name) {
-		return errors.New("user name already exist")
-	}
+func checkRegister(name string, pass string) error {
 	if name == "" {
 		return errors.New("user name is empty")
 	}
@@ -59,6 +56,9 @@ func checkParam(name string, pass string) error {
 	}
 	if len(pass) > MaxPasswordLength {
 		return errors.New("password length exceeds the limit")
+	}
+	if repository.IsUserExistByName(name) {
+		return errors.New("user name already exist")
 	}
 	return nil
 }

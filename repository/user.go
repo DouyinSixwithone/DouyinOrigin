@@ -29,3 +29,21 @@ func InsertNewUser(u *User) error {
 	}
 	return nil
 }
+
+func GetIdByName(name string) (uint, error) {
+	var userId = &User{}
+	err := DB.Model(User{}).Where("name=?", name).First(&userId).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return 0, err
+	}
+	return userId.ID, nil
+}
+
+func GetPassByName(name string) (string, error) {
+	var userId = &User{}
+	err := DB.Model(User{}).Where("name=?", name).First(&userId).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return "", err
+	}
+	return userId.Password, nil
+}

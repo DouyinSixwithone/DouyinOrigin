@@ -9,25 +9,30 @@ import (
 
 type LoginResponse struct {
 	common.Response
-	UserId uint   `json:"user_id,omitempty"`
-	Token  string `json:"token"`
+	user.LoginInfo
 }
 
 func Login(c *gin.Context) {
+
+	// 参数提取部分
 	username := c.Query("username")
 	password := c.Query("password")
 
-	token := username + password
+	// 调用service层得到响应
+	loginInfo, err := user.GetLoginInfo(username, password)
 
-	if u, exist := user.UsersLoginInfo[token]; exist {
+	// 将调用service层得到的Info与Response打包，返回响应
+	if err != nil {
 		c.JSON(http.StatusOK, LoginResponse{
-			Response: common.Response{StatusCode: 0},
-			UserId:   u.Id,
-			Token:    token,
+			Response: common.Response{
+				StatusCode: 1,
+				StatusMsg:  err.Error(),
+			},
 		})
-	} else {
-		c.JSON(http.StatusOK, LoginResponse{
-			Response: common.Response{StatusCode: 1, StatusMsg: "User doesn't exist"},
-		})
+		return
 	}
+	c.JSON(http.StatusOK, LoginResponse{
+		Response:  common.Response{StatusCode: 0},
+		LoginInfo: loginInfo,
+	})
 }

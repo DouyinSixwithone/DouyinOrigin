@@ -14,14 +14,14 @@
 
 ### 二. 小组成员及分工
 
-|     姓名     |          分工          |     进度     |
-| :----------: | :--------------------: | :----------: |
-| 胡杨（队长） |  Github仓库管理，xxx   |   尚未开始   |
-|    周恋程    | 项目架构搭建，user部分 | 完成注册接口 |
-|    陈博宇    |          xxx           |   尚未开始   |
-|    董弘宇    |          xxx           |   尚未开始   |
-|    王君宇    |          xxx           |   尚未开始   |
-|    陈毅杰    |          xxx           |   尚未开始   |
+|     姓名     |          分工          |        进度        |
+| :----------: | :--------------------: | :----------------: |
+| 胡杨（队长） |  Github仓库管理，xxx   |      尚未开始      |
+|    周恋程    | 项目架构搭建，user部分 | 完成注册、登录接口 |
+|    陈博宇    |          xxx           |      尚未开始      |
+|    董弘宇    |          xxx           |      尚未开始      |
+|    王君宇    |          xxx           |      尚未开始      |
+|    陈毅杰    |          xxx           |      尚未开始      |
 
 ### 三. 开发环境配置
 
@@ -37,9 +37,11 @@
 
 2. 根据自己的环境修改`DouyinOrigin/config/config.yaml`中的内容，一般只需要修改用户名和密码。
 
+   完成以上两步后，在终端输入`go run main.go`即可自动下载依赖并运行。
+
 3. 使用安卓模拟器或安卓手机进行测试，[可以参考这篇文章](https://juejin.cn/post/7192600701745233979)。
 
-4. 个人习惯：使用Goland进行开发，蓝叠模拟器进行测试，Typora写文档。
+4. 个人习惯：使用Goland进行开发，蓝叠模拟器进行测试，Typora写文档，Navicat查看数据库信息。
 
 ### 四. Github协同开发tips
 
@@ -91,20 +93,23 @@
 
    * 数据库：Mysql
 
-   * 其他：Redis, jwt
+   * 其他
+     * Redis：缓存
+     * jwt：生成token、鉴权
+     * bcrypt：对输入的password进行加密
+     * yaml：写配置文件
 
 2. 采用 **repository → service → controller** 的分层结构：
 
    <img src="https://raw.githubusercontent.com/Leng-Chu/picture/main/2023/02/upgit_20230204_1675513814.png" alt="image-20230204203013698" style="zoom: 43%;" />
 
    * **controller层**
-
      * 解析得到参数，传递给service层。
-
+     
      * 如果需要返回数据信息，则调用service层的逻辑得到数据；如果不需要返回数据信息，只需要执行特定动作修改数据库，那么调用service层的逻辑执行这个动作。
-
+     
      * 将得到的数据（如果有）与状态码和状态描述打包，返回响应。
-
+     
    * **service层**
 
      * 如果上层需要返回数据信息，则进行参数检查、数据准备、数据打包；如果上层不需要返回数据信息，则进行参数检查、动作的执行。
@@ -136,3 +141,8 @@
    └── README.md
    ```
 
+4. 个人实现过程中参考了以下几个项目：
+
+   * https://github.com/HammerCloth/tiktok
+   * https://github.com/ACking-you/byte_douyin_project
+   * https://github.com/Henrik-Yao/douyin
