@@ -1,8 +1,7 @@
 package common
 
-import "Douyin/service/user"
-
-// 该文件仅用于demo，相应接口实现后可将该文件中的内容删除
+// 该文件仅用于demo，保证未实现的接口不影响程序正常运行
+// 相应接口实现后可将该文件中的内容删除
 
 var DemoVideos = []Video{
 	{
@@ -25,10 +24,22 @@ var DemoComments = []Comment{
 	},
 }
 
-var DemoUser = user.Info{
+var DemoUser = User{
 	Id:            1,
 	Name:          "TestUser",
 	FollowCount:   0,
 	FollowerCount: 0,
 	IsFollow:      false,
+}
+
+// UsersLoginInfo use map to store user info, and key is username+password for demo
+// 该映射已经不能使用，保留只是为了适应未实现的接口，让程序可以正常运行
+var UsersLoginInfo = map[string]User{
+	"zhangleidouyin": {
+		Id:            1,
+		Name:          "zhanglei",
+		FollowCount:   10,
+		FollowerCount: 5,
+		IsFollow:      true,
+	},
 }

@@ -2,7 +2,6 @@ package publish
 
 import (
 	"Douyin/common"
-	"Douyin/service/user"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -14,11 +13,11 @@ type VideoListResponse struct {
 	VideoList []common.Video `json:"video_list"`
 }
 
-// Publish check token then save upload file to data directory
-func Publish(c *gin.Context) {
+// Action check token then save upload file to data directory
+func Action(c *gin.Context) {
 	token := c.PostForm("token")
 
-	if _, exist := user.UsersLoginInfo[token]; !exist {
+	if _, exist := common.UsersLoginInfo[token]; !exist {
 		c.JSON(http.StatusOK, common.Response{StatusCode: 1, StatusMsg: "User doesn't exist"})
 		return
 	}
@@ -33,8 +32,8 @@ func Publish(c *gin.Context) {
 	}
 
 	filename := filepath.Base(data.Filename)
-	u := user.UsersLoginInfo[token]
-	finalName := fmt.Sprintf("%d_%s", u.Id, filename)
+	user := common.UsersLoginInfo[token]
+	finalName := fmt.Sprintf("%d_%s", user.Id, filename)
 	saveFile := filepath.Join("./data/", finalName)
 	if err := c.SaveUploadedFile(data, saveFile); err != nil {
 		c.JSON(http.StatusOK, common.Response{
@@ -50,8 +49,8 @@ func Publish(c *gin.Context) {
 	})
 }
 
-// PublishList all users have same publish video list
-func PublishList(c *gin.Context) {
+// List all users have same publish video list
+func List(c *gin.Context) {
 	c.JSON(http.StatusOK, VideoListResponse{
 		Response: common.Response{
 			StatusCode: 0,

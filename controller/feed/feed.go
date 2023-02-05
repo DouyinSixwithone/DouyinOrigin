@@ -7,15 +7,15 @@ import (
 	"time"
 )
 
-type FeedResponse struct {
+type Response struct {
 	common.Response
 	VideoList []common.Video `json:"video_list,omitempty"`
 	NextTime  int64          `json:"next_time,omitempty"`
 }
 
-// Feed same demo video list for every request
-func Feed(c *gin.Context) {
-	c.JSON(http.StatusOK, FeedResponse{
+// Action same demo video list for every request
+func Action(c *gin.Context) {
+	c.JSON(http.StatusOK, Response{
 		Response:  common.Response{StatusCode: 0},
 		VideoList: common.DemoVideos,
 		NextTime:  time.Now().Unix(),

@@ -2,7 +2,6 @@ package message
 
 import (
 	"Douyin/common"
-	"Douyin/service/user"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -20,15 +19,15 @@ type ChatResponse struct {
 	MessageList []common.Message `json:"message_list"`
 }
 
-// MessageAction no practical effect, just check if token is valid
-func MessageAction(c *gin.Context) {
+// Action no practical effect, just check if token is valid
+func Action(c *gin.Context) {
 	token := c.Query("token")
 	toUserId := c.Query("to_user_id")
 	content := c.Query("content")
 
-	if u, exist := user.UsersLoginInfo[token]; exist {
+	if user, exist := common.UsersLoginInfo[token]; exist {
 		userIdB, _ := strconv.Atoi(toUserId)
-		chatKey := genChatKey(u.Id, uint(userIdB))
+		chatKey := genChatKey(user.Id, uint(userIdB))
 
 		atomic.AddUint64(&messageIdSequence, 1)
 		curMessage := common.Message{
@@ -48,14 +47,14 @@ func MessageAction(c *gin.Context) {
 	}
 }
 
-// MessageChat all users have same follow list
-func MessageChat(c *gin.Context) {
+// Chat all users have same follow list
+func Chat(c *gin.Context) {
 	token := c.Query("token")
 	toUserId := c.Query("to_user_id")
 
-	if u, exist := user.UsersLoginInfo[token]; exist {
+	if user, exist := common.UsersLoginInfo[token]; exist {
 		userIdB, _ := strconv.Atoi(toUserId)
-		chatKey := genChatKey(u.Id, uint(userIdB))
+		chatKey := genChatKey(user.Id, uint(userIdB))
 
 		c.JSON(http.StatusOK, ChatResponse{Response: common.Response{StatusCode: 0}, MessageList: tempChat[chatKey]})
 	} else {

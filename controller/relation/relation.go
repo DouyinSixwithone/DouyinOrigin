@@ -2,21 +2,20 @@ package relation
 
 import (
 	"Douyin/common"
-	"Douyin/service/user"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 type UserListResponse struct {
 	common.Response
-	UserList []user.Info `json:"user_list"`
+	UserList []common.User `json:"user_list"`
 }
 
-// RelationAction no practical effect, just check if token is valid
-func RelationAction(c *gin.Context) {
+// Action no practical effect, just check if token is valid
+func Action(c *gin.Context) {
 	token := c.Query("token")
 
-	if _, exist := user.UsersLoginInfo[token]; exist {
+	if _, exist := common.UsersLoginInfo[token]; exist {
 		c.JSON(http.StatusOK, common.Response{StatusCode: 0})
 	} else {
 		c.JSON(http.StatusOK, common.Response{StatusCode: 1, StatusMsg: "User doesn't exist"})
@@ -29,7 +28,7 @@ func FollowList(c *gin.Context) {
 		Response: common.Response{
 			StatusCode: 0,
 		},
-		UserList: []user.Info{common.DemoUser},
+		UserList: []common.User{common.DemoUser},
 	})
 }
 
@@ -39,7 +38,7 @@ func FollowerList(c *gin.Context) {
 		Response: common.Response{
 			StatusCode: 0,
 		},
-		UserList: []user.Info{common.DemoUser},
+		UserList: []common.User{common.DemoUser},
 	})
 }
 
@@ -49,6 +48,6 @@ func FriendList(c *gin.Context) {
 		Response: common.Response{
 			StatusCode: 0,
 		},
-		UserList: []user.Info{common.DemoUser},
+		UserList: []common.User{common.DemoUser},
 	})
 }

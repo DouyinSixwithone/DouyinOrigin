@@ -2,33 +2,32 @@ package comment
 
 import (
 	"Douyin/common"
-	"Douyin/service/user"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
-type CommentListResponse struct {
-	common.Response
-	CommentList []common.Comment `json:"comment_list,omitempty"`
-}
-
-type CommentActionResponse struct {
+type ActionResponse struct {
 	common.Response
 	Comment common.Comment `json:"comment,omitempty"`
 }
 
-// CommentAction no practical effect, just check if token is valid
-func CommentAction(c *gin.Context) {
+type ListResponse struct {
+	common.Response
+	List []common.Comment `json:"comment_list,omitempty"`
+}
+
+// Action no practical effect, just check if token is valid
+func Action(c *gin.Context) {
 	token := c.Query("token")
 	actionType := c.Query("action_type")
 
-	if u, exist := user.UsersLoginInfo[token]; exist {
+	if user, exist := common.UsersLoginInfo[token]; exist {
 		if actionType == "1" {
 			text := c.Query("comment_text")
-			c.JSON(http.StatusOK, CommentActionResponse{Response: common.Response{StatusCode: 0},
+			c.JSON(http.StatusOK, ActionResponse{Response: common.Response{StatusCode: 0},
 				Comment: common.Comment{
 					Id:         1,
-					User:       u,
+					User:       user,
 					Content:    text,
 					CreateDate: "05-01",
 				}})
@@ -40,10 +39,10 @@ func CommentAction(c *gin.Context) {
 	}
 }
 
-// CommentList all videos have same demo comment list
-func CommentList(c *gin.Context) {
-	c.JSON(http.StatusOK, CommentListResponse{
-		Response:    common.Response{StatusCode: 0},
-		CommentList: common.DemoComments,
+// List all videos have same demo comment list
+func List(c *gin.Context) {
+	c.JSON(http.StatusOK, ListResponse{
+		Response: common.Response{StatusCode: 0},
+		List:     common.DemoComments,
 	})
 }

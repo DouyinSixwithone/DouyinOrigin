@@ -25,5 +25,8 @@ func Init() error {
 	if err = DB.AutoMigrate(User{}); err != nil {
 		return err
 	}
+	if err = DB.AutoMigrate(Relation{}); err != nil {
+		return err
+	}
 	return nil
 }
