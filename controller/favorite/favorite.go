@@ -3,7 +3,7 @@ package favorite
 import (
 	"Douyin/common"
 	"Douyin/controller/publish"
-	"Douyin/controller/user"
+	"Douyin/service/user"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )

@@ -1,5 +1,7 @@
 package common
 
+import "Douyin/service/user"
+
 // 该文件仅用于demo，相应接口实现后可将该文件中的内容删除
 
 var DemoVideos = []Video{
@@ -23,7 +25,7 @@ var DemoComments = []Comment{
 	},
 }
 
-var DemoUser = User{
+var DemoUser = user.Info{
 	Id:            1,
 	Name:          "TestUser",
 	FollowCount:   0,

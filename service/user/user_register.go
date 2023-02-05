@@ -1,10 +1,10 @@
 package user
 
 import (
-	"Douyin/common"
 	"Douyin/middleware/jwt"
 	"Douyin/repository"
 	"errors"
+	"golang.org/x/crypto/bcrypt"
 )
 
 const (
@@ -14,7 +14,7 @@ const (
 )
 
 type RegisterInfo struct {
-	UserId int64  `json:"user_id,omitempty"`
+	UserId uint   `json:"user_id,omitempty"`
 	Token  string `json:"token"`
 }
 
@@ -27,43 +27,57 @@ func GetRegisterInfo(username string, password string) (RegisterInfo, error) {
 	}
 
 	//2.新建用户
-	u, err := createUser(username, password)
+	id, err := createUser(username, password)
 	if err != nil {
 		return RegisterInfo{}, err
 	}
 
 	//3.获得token
-	token, err := jwt.CreateToken(u)
+	token, err := jwt.CreateToken(id, username)
 	if err != nil {
 		return RegisterInfo{}, err
 	}
 
 	return RegisterInfo{
-		UserId: u.Id,
+		UserId: id,
 		Token:  token,
 	}, nil
 }
 
-func checkParam(username string, password string) error {
-	u := repository.GetUserbyName(username)
-	if username == u.Name {
+func checkParam(name string, pass string) error {
+	if repository.IsUserExistByName(name) {
 		return errors.New("user name already exist")
 	}
-	if username == "" {
+	if name == "" {
 		return errors.New("user name is empty")
 	}
-	if len(username) > MaxUsernameLength {
+	if len(name) > MaxUsernameLength {
 		return errors.New("user name length exceeds the limit")
 	}
-	if len(password) < MinPasswordLength {
+	if len(pass) < MinPasswordLength {
 		return errors.New("password is too short")
 	}
-	if len(password) > MaxPasswordLength {
+	if len(pass) > MaxPasswordLength {
 		return errors.New("password length exceeds the limit")
 	}
 	return nil
 }
 
-func createUser(username string, password string) (common.User, error) {
-	return common.User{}, nil
+func createUser(name string, password string) (uint, error) {
+	// 对密码进行bcrypt加密操作
+	hashedPass, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return 0, err
+	}
+	newPass := string(hashedPass)
+
+	newUser := repository.User{
+		Name:     name,
+		Password: newPass,
+	}
+	err = repository.InsertNewUser(&newUser)
+	if err != nil {
+		return 0, err
+	}
+	return newUser.ID, nil
 }

@@ -2,13 +2,14 @@ package user
 
 import (
 	"Douyin/common"
+	"Douyin/service/user"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 type LoginResponse struct {
 	common.Response
-	UserId int64  `json:"user_id,omitempty"`
+	UserId uint   `json:"user_id,omitempty"`
 	Token  string `json:"token"`
 }
 
@@ -18,10 +19,10 @@ func Login(c *gin.Context) {
 
 	token := username + password
 
-	if user, exist := UsersLoginInfo[token]; exist {
+	if u, exist := user.UsersLoginInfo[token]; exist {
 		c.JSON(http.StatusOK, LoginResponse{
 			Response: common.Response{StatusCode: 0},
-			UserId:   user.Id,
+			UserId:   u.Id,
 			Token:    token,
 		})
 	} else {

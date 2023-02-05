@@ -2,7 +2,7 @@ package publish
 
 import (
 	"Douyin/common"
-	"Douyin/controller/user"
+	"Douyin/service/user"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"

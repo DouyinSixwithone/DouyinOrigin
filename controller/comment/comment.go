@@ -2,7 +2,7 @@ package comment
 
 import (
 	"Douyin/common"
-	"Douyin/controller/user"
+	"Douyin/service/user"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )

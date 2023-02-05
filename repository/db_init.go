@@ -20,5 +20,10 @@ func Init() error {
 	if err != nil {
 		return err
 	}
+
+	// 自动建表
+	if err = DB.AutoMigrate(User{}); err != nil {
+		return err
+	}
 	return nil
 }

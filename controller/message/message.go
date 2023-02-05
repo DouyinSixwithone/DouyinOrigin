@@ -2,7 +2,7 @@ package message
 
 import (
 	"Douyin/common"
-	user2 "Douyin/controller/user"
+	"Douyin/service/user"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -13,7 +13,7 @@ import (
 
 var tempChat = map[string][]common.Message{}
 
-var messageIdSequence = int64(1)
+var messageIdSequence = uint64(1)
 
 type ChatResponse struct {
 	common.Response
@@ -26,13 +26,13 @@ func MessageAction(c *gin.Context) {
 	toUserId := c.Query("to_user_id")
 	content := c.Query("content")
 
-	if user, exist := user2.UsersLoginInfo[token]; exist {
+	if u, exist := user.UsersLoginInfo[token]; exist {
 		userIdB, _ := strconv.Atoi(toUserId)
-		chatKey := genChatKey(user.Id, int64(userIdB))
+		chatKey := genChatKey(u.Id, uint(userIdB))
 
-		atomic.AddInt64(&messageIdSequence, 1)
+		atomic.AddUint64(&messageIdSequence, 1)
 		curMessage := common.Message{
-			Id:         messageIdSequence,
+			Id:         uint(messageIdSequence),
 			Content:    content,
 			CreateTime: time.Now().Format(time.Kitchen),
 		}
@@ -53,9 +53,9 @@ func MessageChat(c *gin.Context) {
 	token := c.Query("token")
 	toUserId := c.Query("to_user_id")
 
-	if user, exist := user2.UsersLoginInfo[token]; exist {
+	if u, exist := user.UsersLoginInfo[token]; exist {
 		userIdB, _ := strconv.Atoi(toUserId)
-		chatKey := genChatKey(user.Id, int64(userIdB))
+		chatKey := genChatKey(u.Id, uint(userIdB))
 
 		c.JSON(http.StatusOK, ChatResponse{Response: common.Response{StatusCode: 0}, MessageList: tempChat[chatKey]})
 	} else {
@@ -63,7 +63,7 @@ func MessageChat(c *gin.Context) {
 	}
 }
 
-func genChatKey(userIdA int64, userIdB int64) string {
+func genChatKey(userIdA uint, userIdB uint) string {
 	if userIdA > userIdB {
 		return fmt.Sprintf("%d_%d", userIdB, userIdA)
 	}
