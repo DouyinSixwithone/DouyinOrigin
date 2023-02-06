@@ -5,7 +5,7 @@ import (
 	"gorm.io/gorm"
 )
 
-// User 存储User的基本信息，以gorm.Model.ID作为用户的id，name为明文，password加密后存储在数据库
+// User 存储User的基本信息，以gorm.Model.ID作为用户的id，name为明文，password加密后存储在数据库。
 type User struct {
 	gorm.Model
 	Name     string

@@ -10,6 +10,7 @@ import (
 var DB *gorm.DB
 
 func Init() error {
+
 	info := config.Conf.Mysql
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s&parseTime=%v&loc=%s",
 		info.User, info.Pass, info.Host, info.Port, info.Dbname,
@@ -25,7 +26,19 @@ func Init() error {
 	if err = DB.AutoMigrate(User{}); err != nil {
 		return err
 	}
+	if err = DB.AutoMigrate(Video{}); err != nil {
+		return err
+	}
+	if err = DB.AutoMigrate(Comment{}); err != nil {
+		return err
+	}
+	if err = DB.AutoMigrate(Favorite{}); err != nil {
+		return err
+	}
 	if err = DB.AutoMigrate(Relation{}); err != nil {
+		return err
+	}
+	if err = DB.AutoMigrate(Message{}); err != nil {
 		return err
 	}
 	return nil

@@ -21,7 +21,6 @@
 |    陈博宇    |                xxx                |          尚未开始          |
 |    董弘宇    |                xxx                |          尚未开始          |
 |    王君宇    |                xxx                |          尚未开始          |
-|    陈毅杰    |                xxx                |          尚未开始          |
 
 ### 三. 开发环境配置
 
@@ -81,7 +80,7 @@
    
    * 如果不喜欢输命令行，可以使用Goland中的Git菜单进行操作，尤其建议使用Goland进行提交前的检查。
    
-     <img src="https://raw.githubusercontent.com/Leng-Chu/picture/main/2023/02/upgit_20230204_1675506189.png" alt="image-20230203170910729" style="zoom:45%;" />
+     <img src="https://raw.githubusercontent.com/Leng-Chu/picture/main/2023/02/upgit_20230204_1675506189.png" alt="image-20230203170910729" style="zoom:60%;" />
 
 5. 根据开发进度，队长会不定时将dev分支中的内容合并到main分支。
 
@@ -101,7 +100,7 @@
 
 2. 采用 **repository → service → controller** 的分层结构：
 
-   <img src="https://raw.githubusercontent.com/Leng-Chu/picture/main/2023/02/upgit_20230204_1675513814.png" alt="image-20230204203013698" style="zoom: 43%;" />
+   <img src="https://raw.githubusercontent.com/Leng-Chu/picture/main/2023/02/upgit_20230204_1675513814.png" alt="image-20230204203013698" style="zoom: 60%;" />
 
    * **controller层**
      * 解析得到参数，传递给service层。
@@ -150,7 +149,7 @@
 
 5. 其他注意事项
 
-   * 数据库不需要手动建表，可以在代码中定义好结构体，并在db_init.go文件中调用DB.AutoMigrate函数，根据结构体自动建表，示例如下：
+   * 数据库不需要手动建表，已在db_init.go文件中调用DB.AutoMigrate函数，根据结构体自动建表，示例如下：
 
      ```go
      type User struct {
@@ -163,8 +162,28 @@
      }
      ```
 
+     事实上表已经在repository的各个文件中定义好，应该没什么需要修改的（确信）。
+
    * 对token进行鉴权的操作已经在中间件中完成，也就是说写接口时不太需要管token参数。
 
+     部分接口只传入了token参数，未传入user_id，此时需要使用以下代码，从token中获取user_id：
+   
+     ```
+     //方法1：从token中解析出id，解析的步骤已经在中间件中写好，直接调用get方法即可
+         idToken, ok := c.Get("user_id")
+         // 根据ok判断是否合法
+         id, err := idToken.(uint)
+         // 判断err
+     
+     //方法2：如果传入了user_id参数，可以直接调用query方法得到id
+     	idStr := c.Query("user_id")
+     	id, err := strconv.ParseUint(idStr, 10, 64)
+     	// 判断err
+     	// 注意此时id的类型为uint64，可能需要强制转换为uint再使用
+     ```
+   
    * Redis我也还没用过，但先把配置文件和初始化函数写好了看你们写的时候用不用得到（比如评论和赞的部分可以调用缓存？）
-
+   
+   * 很多地方的接口需要返回用户信息，可以直接调用service/user中的GetUserInfo函数。
+   
    * 有问题可以在群里问或者私戳我，同时我也是新手，欢迎大家对项目架构进行进一步优化。

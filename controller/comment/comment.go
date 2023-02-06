@@ -16,27 +16,21 @@ type ListResponse struct {
 	List []common.Comment `json:"comment_list,omitempty"`
 }
 
-// Action no practical effect, just check if token is valid
+// Action no practical effect
 func Action(c *gin.Context) {
-	token := c.Query("token")
 	actionType := c.Query("action_type")
-
-	if user, exist := common.UsersLoginInfo[token]; exist {
-		if actionType == "1" {
-			text := c.Query("comment_text")
-			c.JSON(http.StatusOK, ActionResponse{Response: common.Response{StatusCode: 0},
-				Comment: common.Comment{
-					Id:         1,
-					User:       user,
-					Content:    text,
-					CreateDate: "05-01",
-				}})
-			return
-		}
-		c.JSON(http.StatusOK, common.Response{StatusCode: 0})
-	} else {
-		c.JSON(http.StatusOK, common.Response{StatusCode: 1, StatusMsg: "User doesn't exist"})
+	if actionType == "1" {
+		text := c.Query("comment_text")
+		c.JSON(http.StatusOK, ActionResponse{Response: common.Response{StatusCode: 0},
+			Comment: common.Comment{
+				Id:         1,
+				User:       common.DemoUser,
+				Content:    text,
+				CreateDate: "05-01",
+			}})
+		return
 	}
+	c.JSON(http.StatusOK, common.Response{StatusCode: 0})
 }
 
 // List all videos have same demo comment list

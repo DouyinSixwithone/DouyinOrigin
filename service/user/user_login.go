@@ -7,55 +7,39 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type LoginInfo struct {
-	UserId uint   `json:"user_id,omitempty"`
-	Token  string `json:"token"`
-}
-
-func GetLoginInfo(username string, password string) (LoginInfo, error) {
+func GetLoginInfo(username string, password string) (uint, string, error) {
 
 	//1.合法性检验
 	err := checkLogin(username, password)
 	if err != nil {
-		return LoginInfo{}, err
+		return 0, "", err
 	}
 
 	//2.获得id
 	id, err := repository.GetIdByName(username)
 	if err != nil {
-		return LoginInfo{}, err
+		return 0, "", err
 	}
 
 	//3.获得token
 	token, err := jwt.CreateToken(id)
 	if err != nil {
-		return LoginInfo{}, err
+		return 0, "", err
 	}
 
-	return LoginInfo{
-		UserId: id,
-		Token:  token,
-	}, nil
+	return id, token, nil
 }
 
 func checkLogin(name string, pass string) error {
-	if name == "" {
-		return errors.New("user name is empty")
-	}
-	if len(name) > MaxUsernameLength {
-		return errors.New("user name length exceeds the limit")
-	}
-	if len(pass) < MinPasswordLength {
-		return errors.New("password is too short")
-	}
-	if len(pass) > MaxPasswordLength {
-		return errors.New("password length exceeds the limit")
-	}
-	// 验证密码是否正确
+	// 此处不需要验证用户名和密码过长过短的问题，直接验证用户是否存在以及密码是否正确即可
+
+	// 得到密码的同时验证用户名是否存在
 	hashedPass, err := repository.GetPassByName(name)
 	if err != nil {
 		return errors.New("user name doesn't exist")
 	}
+
+	// 验证密码是否正确
 	if err = bcrypt.CompareHashAndPassword([]byte(hashedPass), []byte(pass)); err != nil {
 		return errors.New("incorrect password")
 	}

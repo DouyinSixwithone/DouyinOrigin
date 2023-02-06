@@ -6,48 +6,42 @@ import (
 	"net/http"
 )
 
-type UserListResponse struct {
+type ListResponse struct {
 	common.Response
-	UserList []common.User `json:"user_list"`
+	List []common.User `json:"user_list"`
 }
 
-// Action no practical effect, just check if token is valid
+// Action no practical effect
 func Action(c *gin.Context) {
-	token := c.Query("token")
-
-	if _, exist := common.UsersLoginInfo[token]; exist {
-		c.JSON(http.StatusOK, common.Response{StatusCode: 0})
-	} else {
-		c.JSON(http.StatusOK, common.Response{StatusCode: 1, StatusMsg: "User doesn't exist"})
-	}
+	c.JSON(http.StatusOK, common.Response{StatusCode: 0})
 }
 
 // FollowList all users have same follow list
 func FollowList(c *gin.Context) {
-	c.JSON(http.StatusOK, UserListResponse{
+	c.JSON(http.StatusOK, ListResponse{
 		Response: common.Response{
 			StatusCode: 0,
 		},
-		UserList: []common.User{common.DemoUser},
+		List: []common.User{common.DemoUser},
 	})
 }
 
 // FollowerList all users have same follower list
 func FollowerList(c *gin.Context) {
-	c.JSON(http.StatusOK, UserListResponse{
+	c.JSON(http.StatusOK, ListResponse{
 		Response: common.Response{
 			StatusCode: 0,
 		},
-		UserList: []common.User{common.DemoUser},
+		List: []common.User{common.DemoUser},
 	})
 }
 
 // FriendList all users have same friend list
 func FriendList(c *gin.Context) {
-	c.JSON(http.StatusOK, UserListResponse{
+	c.JSON(http.StatusOK, ListResponse{
 		Response: common.Response{
 			StatusCode: 0,
 		},
-		UserList: []common.User{common.DemoUser},
+		List: []common.User{common.DemoUser},
 	})
 }

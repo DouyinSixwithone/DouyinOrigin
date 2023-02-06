@@ -2,7 +2,7 @@ package repository
 
 import "gorm.io/gorm"
 
-// Relation 存储关注信息，表示Follower关注User
+// Relation 存储关注信息，表示follower关注了user。
 type Relation struct {
 	gorm.Model
 	UserId     uint
@@ -18,5 +18,9 @@ func GetFollowerCountById(id uint) (uint, error) {
 }
 
 func IsBFollowA(idA uint, idB uint) (bool, error) {
+	if idA == idB {
+		return false, nil
+	}
+	// 未完善
 	return false, nil
 }

@@ -9,7 +9,8 @@ import (
 
 type LoginResponse struct {
 	common.Response
-	user.LoginInfo
+	UserId uint   `json:"user_id,omitempty"`
+	Token  string `json:"token"`
 }
 
 func Login(c *gin.Context) {
@@ -19,7 +20,7 @@ func Login(c *gin.Context) {
 	password := c.Query("password")
 
 	// 调用service层得到响应
-	loginInfo, err := user.GetLoginInfo(username, password)
+	id, token, err := user.GetLoginInfo(username, password)
 
 	// 将调用service层得到的Info与Response打包，返回响应
 	if err != nil {
@@ -32,7 +33,8 @@ func Login(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, LoginResponse{
-		Response:  common.Response{StatusCode: 0},
-		LoginInfo: loginInfo,
+		Response: common.Response{StatusCode: 0},
+		UserId:   id,
+		Token:    token,
 	})
 }

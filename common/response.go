@@ -1,6 +1,6 @@
 package common
 
-// 该文件为demo自带，修改时请注意调用关系
+// 返回响应时需要用到的结构体，为demo自带，不需要修改
 
 type Response struct {
 	StatusCode int32  `json:"status_code"`

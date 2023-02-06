@@ -9,7 +9,8 @@ import (
 
 type RegisterResponse struct {
 	common.Response
-	user.RegisterInfo
+	UserId uint   `json:"user_id,omitempty"`
+	Token  string `json:"token"`
 }
 
 func Register(c *gin.Context) {
@@ -19,7 +20,7 @@ func Register(c *gin.Context) {
 	password := c.Query("password")
 
 	// 调用service层得到响应
-	registerInfo, err := user.GetRegisterInfo(username, password)
+	id, token, err := user.GetRegisterInfo(username, password)
 
 	// 将调用service层得到的Info与Response打包，返回响应
 	if err != nil {
@@ -32,8 +33,9 @@ func Register(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, RegisterResponse{
-		Response:     common.Response{StatusCode: 0},
-		RegisterInfo: registerInfo,
+		Response: common.Response{StatusCode: 0},
+		UserId:   id,
+		Token:    token,
 	})
 	return
 }

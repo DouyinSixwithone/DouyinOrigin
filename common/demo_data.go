@@ -31,15 +31,3 @@ var DemoUser = User{
 	FollowerCount: 0,
 	IsFollow:      false,
 }
-
-// UsersLoginInfo use map to store user info, and key is username+password for demo
-// 该映射已经不能使用，保留只是为了适应未实现的接口，让程序可以正常运行
-var UsersLoginInfo = map[string]User{
-	"zhangleidouyin": {
-		Id:            1,
-		Name:          "zhanglei",
-		FollowCount:   10,
-		FollowerCount: 5,
-		IsFollow:      true,
-	},
-}

@@ -13,35 +13,27 @@ const (
 	MinPasswordLength = 6  //密码最小长度
 )
 
-type RegisterInfo struct {
-	UserId uint   `json:"user_id,omitempty"`
-	Token  string `json:"token"`
-}
-
-func GetRegisterInfo(username string, password string) (RegisterInfo, error) {
+func GetRegisterInfo(username string, password string) (uint, string, error) {
 
 	//1.合法性检验
 	err := checkRegister(username, password)
 	if err != nil {
-		return RegisterInfo{}, err
+		return 0, "", err
 	}
 
 	//2.新建用户
 	id, err := createUser(username, password)
 	if err != nil {
-		return RegisterInfo{}, err
+		return 0, "", err
 	}
 
 	//3.获得token
 	token, err := jwt.CreateToken(id)
 	if err != nil {
-		return RegisterInfo{}, err
+		return 0, "", err
 	}
 
-	return RegisterInfo{
-		UserId: id,
-		Token:  token,
-	}, nil
+	return id, token, nil
 }
 
 func checkRegister(name string, pass string) error {
