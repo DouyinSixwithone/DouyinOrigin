@@ -170,10 +170,10 @@
    
      ```
      //方法1：从token中解析出id，解析的步骤已经在中间件中写好，直接调用get方法即可
-         idToken, ok := c.Get("user_id")
-         // 根据ok判断是否合法
-         id, err := idToken.(uint)
-         // 判断err
+      idToken, ok := c.Get("user_id")
+      // 根据ok判断是否合法
+      id, err := idToken.(uint)
+      // 判断err
      
      //方法2：如果传入了user_id参数，可以直接调用query方法得到id
      	idStr := c.Query("user_id")
