@@ -2,7 +2,6 @@ package message
 
 import (
 	"Douyin/common"
-	user2 "Douyin/controller/user"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -13,57 +12,49 @@ import (
 
 var tempChat = map[string][]common.Message{}
 
-var messageIdSequence = int64(1)
+var messageIdSequence = uint64(1)
 
 type ChatResponse struct {
 	common.Response
 	MessageList []common.Message `json:"message_list"`
 }
 
-// MessageAction no practical effect, just check if token is valid
-func MessageAction(c *gin.Context) {
-	token := c.Query("token")
+// Action no practical effect
+func Action(c *gin.Context) {
+	user := common.DemoUser
 	toUserId := c.Query("to_user_id")
 	content := c.Query("content")
 
-	if user, exist := user2.UsersLoginInfo[token]; exist {
-		userIdB, _ := strconv.Atoi(toUserId)
-		chatKey := genChatKey(user.Id, int64(userIdB))
+	userIdB, _ := strconv.Atoi(toUserId)
+	chatKey := genChatKey(user.Id, uint(userIdB))
 
-		atomic.AddInt64(&messageIdSequence, 1)
-		curMessage := common.Message{
-			Id:         messageIdSequence,
-			Content:    content,
-			CreateTime: time.Now().Format(time.Kitchen),
-		}
-
-		if messages, exist := tempChat[chatKey]; exist {
-			tempChat[chatKey] = append(messages, curMessage)
-		} else {
-			tempChat[chatKey] = []common.Message{curMessage}
-		}
-		c.JSON(http.StatusOK, common.Response{StatusCode: 0})
-	} else {
-		c.JSON(http.StatusOK, common.Response{StatusCode: 1, StatusMsg: "User doesn't exist"})
+	atomic.AddUint64(&messageIdSequence, 1)
+	curMessage := common.Message{
+		Id:         uint(messageIdSequence),
+		Content:    content,
+		CreateTime: time.Now().Format(time.Kitchen),
 	}
+
+	if messages, exist := tempChat[chatKey]; exist {
+		tempChat[chatKey] = append(messages, curMessage)
+	} else {
+		tempChat[chatKey] = []common.Message{curMessage}
+	}
+	c.JSON(http.StatusOK, common.Response{StatusCode: 0})
 }
 
-// MessageChat all users have same follow list
-func MessageChat(c *gin.Context) {
-	token := c.Query("token")
+// Chat all users have same follow list
+func Chat(c *gin.Context) {
+	user := common.DemoUser
 	toUserId := c.Query("to_user_id")
 
-	if user, exist := user2.UsersLoginInfo[token]; exist {
-		userIdB, _ := strconv.Atoi(toUserId)
-		chatKey := genChatKey(user.Id, int64(userIdB))
+	userIdB, _ := strconv.Atoi(toUserId)
+	chatKey := genChatKey(user.Id, uint(userIdB))
 
-		c.JSON(http.StatusOK, ChatResponse{Response: common.Response{StatusCode: 0}, MessageList: tempChat[chatKey]})
-	} else {
-		c.JSON(http.StatusOK, common.Response{StatusCode: 1, StatusMsg: "User doesn't exist"})
-	}
+	c.JSON(http.StatusOK, ChatResponse{Response: common.Response{StatusCode: 0}, MessageList: tempChat[chatKey]})
 }
 
-func genChatKey(userIdA int64, userIdB int64) string {
+func genChatKey(userIdA uint, userIdB uint) string {
 	if userIdA > userIdB {
 		return fmt.Sprintf("%d_%d", userIdB, userIdA)
 	}

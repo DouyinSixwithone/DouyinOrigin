@@ -8,6 +8,7 @@ import (
 	"Douyin/controller/publish"
 	"Douyin/controller/relation"
 	"Douyin/controller/user"
+	"Douyin/middleware/jwt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,25 +18,25 @@ func Init(r *gin.Engine) {
 
 	apiRouter := r.Group("/douyin")
 
-	// basic apis
-	apiRouter.GET("/feed/", feed.Feed)
-	apiRouter.GET("/user/", user.UserInfo)
+	// basic apis 其中feed、register、login接口对非登录用户也开放
+	apiRouter.GET("/feed/", feed.List)
+	apiRouter.GET("/user/", jwt.AuthWithLogin(), user.Info)
 	apiRouter.POST("/user/register/", user.Register)
 	apiRouter.POST("/user/login/", user.Login)
-	apiRouter.POST("/publish/action/", publish.Publish)
-	apiRouter.GET("/publish/list/", publish.PublishList)
+	apiRouter.POST("/publish/action/", jwt.AuthWithLogin(), publish.Action)
+	apiRouter.GET("/publish/list/", jwt.AuthWithLogin(), publish.List)
 
-	// extra apis - I
-	apiRouter.POST("/favorite/action/", favorite.FavoriteAction)
-	apiRouter.GET("/favorite/list/", favorite.FavoriteList)
-	apiRouter.POST("/comment/action/", comment.CommentAction)
-	apiRouter.GET("/comment/list/", comment.CommentList)
+	// extra apis - I 其中CommentList接口对非登录用户也开放
+	apiRouter.POST("/favorite/action/", jwt.AuthWithLogin(), favorite.Action)
+	apiRouter.GET("/favorite/list/", jwt.AuthWithLogin(), favorite.List)
+	apiRouter.POST("/comment/action/", jwt.AuthWithLogin(), comment.Action)
+	apiRouter.GET("/comment/list/", comment.List)
 
 	// extra apis - II
-	apiRouter.POST("/relation/action/", relation.RelationAction)
-	apiRouter.GET("/relation/follow/list/", relation.FollowList)
-	apiRouter.GET("/relation/follower/list/", relation.FollowerList)
-	apiRouter.GET("/relation/friend/list/", relation.FriendList)
-	apiRouter.GET("/message/chat/", message.MessageChat)
-	apiRouter.POST("/message/action/", message.MessageAction)
+	apiRouter.POST("/relation/action/", jwt.AuthWithLogin(), relation.Action)
+	apiRouter.GET("/relation/follow/list/", jwt.AuthWithLogin(), relation.FollowList)
+	apiRouter.GET("/relation/follower/list/", jwt.AuthWithLogin(), relation.FollowerList)
+	apiRouter.GET("/relation/friend/list/", jwt.AuthWithLogin(), relation.FriendList)
+	apiRouter.GET("/message/chat/", jwt.AuthWithLogin(), message.Chat)
+	apiRouter.POST("/message/action/", jwt.AuthWithLogin(), message.Action)
 }

@@ -3,6 +3,7 @@ module Douyin
 go 1.19
 
 require (
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-gonic/gin v1.7.7
 	github.com/go-redis/redis/v8 v8.11.5
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
