@@ -14,6 +14,7 @@ type ListResponse struct {
 }
 
 // List same demo video list for every request
+// 注意：如果用户已登录，推送的视频流中不应该包含本人发布的视频
 func List(c *gin.Context) {
 
 	c.JSON(http.StatusOK, ListResponse{

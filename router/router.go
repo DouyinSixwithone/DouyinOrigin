@@ -19,7 +19,7 @@ func Init(r *gin.Engine) {
 	apiRouter := r.Group("/douyin")
 
 	// basic apis 其中feed、register、login接口对非登录用户也开放
-	apiRouter.GET("/feed/", feed.List)
+	apiRouter.GET("/feed/", jwt.AuthWithoutLogin(), feed.List)
 	apiRouter.GET("/user/", jwt.AuthWithLogin(), user.Info)
 	apiRouter.POST("/user/register/", user.Register)
 	apiRouter.POST("/user/login/", user.Login)
@@ -30,7 +30,7 @@ func Init(r *gin.Engine) {
 	apiRouter.POST("/favorite/action/", jwt.AuthWithLogin(), favorite.Action)
 	apiRouter.GET("/favorite/list/", jwt.AuthWithLogin(), favorite.List)
 	apiRouter.POST("/comment/action/", jwt.AuthWithLogin(), comment.Action)
-	apiRouter.GET("/comment/list/", comment.List)
+	apiRouter.GET("/comment/list/", jwt.AuthWithoutLogin(), comment.List)
 
 	// extra apis - II
 	apiRouter.POST("/relation/action/", jwt.AuthWithLogin(), relation.Action)
