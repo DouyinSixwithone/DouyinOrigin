@@ -3,7 +3,7 @@ package config
 import (
 	"fmt"
 	"gopkg.in/yaml.v3"
-	"io/ioutil"
+	"os"
 )
 
 type Mysql struct {
@@ -24,8 +24,10 @@ type Redis struct {
 }
 
 type Yaml2Go struct {
-	Mysql Mysql `yaml:"mysql"`
-	Redis Redis `yaml:"redis"`
+	Mysql  Mysql  `yaml:"mysql"`
+	Redis  Redis  `yaml:"redis"`
+	Ip     string `yaml:"ip"`
+	Ffmpeg string `yaml:"ffmpeg"`
 }
 
 const confFile = "config/config.yaml"
@@ -33,7 +35,7 @@ const confFile = "config/config.yaml"
 var Conf Yaml2Go
 
 func Init() error {
-	data, err := ioutil.ReadFile(confFile)
+	data, err := os.ReadFile(confFile)
 	if err != nil {
 		return err
 	}

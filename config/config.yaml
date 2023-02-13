@@ -12,3 +12,7 @@ redis:
   host : 127.0.0.1
   port : 6379
   pass :
+
+ip : 192.168.50.51
+
+ffmpeg : C:\Users\lc\Desktop\DouyinOrigin\middleware\ffmpeg\ffmpeg.exe
