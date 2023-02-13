@@ -9,6 +9,7 @@
 - [抖音项目方案说明](https://bytedance.feishu.cn/docs/doccnKrCsU5Iac6eftnFBdsXTof)
 - [接口说明文档](https://www.apifox.cn/apidoc/shared-09d88f32-0b6c-4157-9d07-a36d32d7a75c/api-50707523)
 - [极简抖音App使用说明](https://bytedance.feishu.cn/docs/doccnM9KkBAdyDhg8qaeGlIz7S7)
+- [答辩汇报文档模板](https://bytedance.feishu.cn/docx/ML16dUoW9o4hqkxfeWEcgr1onEb)
 - [服务端Demo仓库地址](https://github.com/RaymondCode/simple-demo)
 - [本项目仓库地址](https://github.com/DouyinSixwithone/DouyinOrigin)
 
@@ -19,7 +20,6 @@
 | 胡杨（队长） |        Github仓库管理，xxx        |      尚未开始      |
 |    周恋程    | 项目架构搭建，user接口，jwt中间件 | 已完成，未严格测试 |
 |    陈博宇    |                xxx                |      尚未开始      |
-|    王君宇    |       publish接口，feed接口       |      尚未开始      |
 
 ### 三. 开发环境配置
 
@@ -33,9 +33,9 @@
 
    以上环境的安装教程百度即可。
 
-2. 根据自己的环境修改`DouyinOrigin/config/config.yaml`中的内容，一般只需要修改用户名和密码。
+2. 根据自己的环境修改`DouyinOrigin/config/config.yaml`中的内容，需要修改数据库的用户名和密码，本机ip地址，ffmpeg.exe的绝对路径。
 
-   完成以上两步后，在终端输入`go run main.go msgServer.go`即可自动下载依赖并运行。
+   完成以上步骤后，在终端输入`go run main.go msgServer.go`即可自动下载依赖并运行。
 
 3. 使用安卓模拟器或安卓手机进行测试，[可以参考这篇文章](https://juejin.cn/post/7192600701745233979)。
 
@@ -95,6 +95,7 @@
      * Redis：缓存
      * jwt：生成token、鉴权
      * bcrypt：对输入的password进行加密，数据库中存储加密后的密码
+     * ffmpeg：截取视频的一帧作为封面
      * yaml：写配置文件
 
 2. 采用 **repository → service → controller** 的分层结构：
@@ -131,7 +132,7 @@
    │   ├── jwt/ 鉴权
    │   └── redis/ 缓存
    ├── /router/ 路由配置
-   ├── /data/ 上传的视频文件存储在本地
+   ├── /data/ 上传的视频文件存储在本地的路径，若不存在会自动创建，子文件夹名为userid
    ├── /go.mod/
    ├── msgServer.go  demo中提供的消息服务，不太清楚怎么用
    ├── main.go  程序入口
@@ -157,7 +158,7 @@
      	Password string
      }
      if err := DB.AutoMigrate(User{}); err != nil {
-     		return err
+     	return err
      }
      ```
 

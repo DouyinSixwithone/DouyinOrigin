@@ -10,5 +10,12 @@ type Video struct {
 	AuthorId uint
 	PlayUrl  string
 	CoverUrl string
-	title    string
+	Title    string
+}
+
+func InsertNewVideo(v *Video) error {
+	if err := DB.Create(v).Error; err != nil {
+		return err
+	}
+	return nil
 }
