@@ -10,3 +10,7 @@ type Comment struct {
 	VideoId uint
 	Content string
 }
+
+func GetCommentCountById(id uint) uint {
+	return 0
+}

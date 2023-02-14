@@ -9,18 +9,22 @@ type Relation struct {
 	FollowerId uint
 }
 
-func GetFollowCountById(id uint) (uint, error) {
-	return 0, nil
+func GetFollowCountById(id uint) uint {
+	return 0
 }
 
-func GetFollowerCountById(id uint) (uint, error) {
-	return 0, nil
+func GetFollowerCountById(id uint) uint {
+	return 0
 }
 
-func IsBFollowA(idA uint, idB uint) (bool, error) {
+// IsBFollowA 用户B是否关注用户A
+func IsBFollowA(idA uint, idB uint) bool {
 	if idA == idB {
-		return false, nil
+		return false
+	}
+	if idB == 0 {
+		return false
 	}
 	// 未完善
-	return false, nil
+	return false
 }

@@ -8,3 +8,16 @@ type Favorite struct {
 	UserId  uint
 	VideoId uint
 }
+
+func GetFavoriteCountById(id uint) uint {
+	return 0
+}
+
+// IsBFavoriteA 用户B是否给视频A点赞
+func IsBFavoriteA(idA uint, idB uint) bool {
+	if idB == 0 {
+		return false
+	}
+	// 未完善
+	return false
+}

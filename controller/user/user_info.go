@@ -15,13 +15,22 @@ type InfoResponse struct {
 
 func Info(c *gin.Context) {
 
-	//方法1：从token中解析出id，解析的步骤已经在中间件中写好，直接调用get方法即可
-	//idToken, ok := c.Get("user_id")
-	//id, err := idToken.(uint)
+	//从token中解析出id，得到的是当前登录用户的id
+	idToken, _ := c.Get("user_id")
+	guestId, ok := idToken.(uint)
+	if !ok {
+		c.JSON(http.StatusOK, InfoResponse{
+			Response: common.Response{
+				StatusCode: 1,
+				StatusMsg:  "invalid user id",
+			},
+		})
+		return
+	}
 
-	//方法2：直接调用query方法得到id，代码如下
+	//调用query方法得到要查询的用户id
 	idStr := c.Query("user_id")
-	id, err := strconv.ParseUint(idStr, 10, 64)
+	userId, err := strconv.ParseUint(idStr, 10, 64)
 	if err != nil {
 		c.JSON(http.StatusOK, InfoResponse{
 			Response: common.Response{
@@ -33,7 +42,7 @@ func Info(c *gin.Context) {
 	}
 
 	// 因为要返回is_follow的信息，所以接口传入了两个id
-	userInfo, err := user.GetUserInfo(uint(id), uint(id))
+	userInfo, err := user.GetUserInfo(uint(userId), guestId)
 	if err != nil {
 		c.JSON(http.StatusOK, InfoResponse{
 			Response: common.Response{
@@ -43,6 +52,7 @@ func Info(c *gin.Context) {
 		})
 		return
 	}
+
 	c.JSON(http.StatusOK, InfoResponse{
 		Response: common.Response{StatusCode: 0},
 		User:     userInfo,

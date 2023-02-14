@@ -16,10 +16,7 @@ func GetLoginInfo(username string, password string) (uint, string, error) {
 	}
 
 	//2.获得id
-	id, err := repository.GetIdByName(username)
-	if err != nil {
-		return 0, "", err
-	}
+	id := repository.GetIdByName(username)
 
 	//3.获得token
 	token, err := jwt.CreateToken(id)

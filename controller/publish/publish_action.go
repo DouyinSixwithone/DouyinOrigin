@@ -3,7 +3,6 @@ package publish
 import (
 	"Douyin/common"
 	"Douyin/service/publish"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
 	"net/http"
@@ -26,14 +25,7 @@ func Action(c *gin.Context) {
 	}
 
 	// 2. 获取用户
-	idToken, ok := c.Get("user_id")
-	if !ok {
-		c.JSON(http.StatusOK, common.Response{
-			StatusCode: 1,
-			StatusMsg:  "user id not found",
-		})
-		return
-	}
+	idToken, _ := c.Get("user_id")
 	id, ok := idToken.(uint)
 	if !ok {
 		c.JSON(http.StatusOK, common.Response{
@@ -44,9 +36,9 @@ func Action(c *gin.Context) {
 	}
 
 	// 3. 生成视频名并将视频保存到本地
-	name := uuid.NewV4().String()                  // 生成随机的uuid作为视频名
-	playSuffix := filepath.Ext(data.Filename)      // 得到视频文件类型
-	savePath := "./data/" + fmt.Sprintf("%v/", id) // 存储路径为./data/:user_id
+	name := uuid.NewV4().String()             // 生成随机的uuid作为视频名
+	playSuffix := filepath.Ext(data.Filename) // 得到视频文件类型
+	savePath := "./data/"
 	// 如果文件夹不存在则创建
 	if _, err := os.Stat(savePath); os.IsNotExist(err) {
 		if err = os.MkdirAll(savePath, os.ModePerm); err != nil {

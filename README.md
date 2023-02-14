@@ -15,11 +15,11 @@
 
 ### 二. 小组成员及分工
 
-|     姓名     |               分工                |        进度        |
-| :----------: | :-------------------------------: | :----------------: |
+|     姓名     |              分工              |        进度        |
+| :----------: |:----------------------------:| :----------------: |
 | 胡杨（队长） |        Github仓库管理，xxx        |      尚未开始      |
-|    周恋程    | 项目架构搭建，user接口，jwt中间件 | 已完成，未严格测试 |
-|    陈博宇    |                xxx                |      尚未开始      |
+|    周恋程    | 项目架构搭建，user和publish接口，jwt中间件 | 已完成，未严格测试 |
+|    陈博宇    |             xxx              |      尚未开始      |
 
 ### 三. 开发环境配置
 
@@ -35,7 +35,7 @@
 
 2. 根据自己的环境修改`DouyinOrigin/config/config.yaml`中的内容，需要修改数据库的用户名和密码，本机ip地址，ffmpeg.exe的绝对路径。
 
-   完成以上步骤后，在终端输入`go run main.go msgServer.go`即可自动下载依赖并运行。
+   完成以上步骤并确保mysql中存在名为douyin的数据库，在终端输入`go run main.go msgServer.go`即可自动下载依赖并运行。
 
 3. 使用安卓模拟器或安卓手机进行测试，[可以参考这篇文章](https://juejin.cn/post/7192600701745233979)。
 
@@ -132,7 +132,7 @@
    │   ├── jwt/ 鉴权
    │   └── redis/ 缓存
    ├── /router/ 路由配置
-   ├── /data/ 上传的视频文件存储在本地的路径，若不存在会自动创建，子文件夹名为userid
+   ├── /data/ 上传的视频文件存储在本地的路径，若不存在会自动创建
    ├── /go.mod/
    ├── msgServer.go  demo中提供的消息服务，不太清楚怎么用
    ├── main.go  程序入口
@@ -145,7 +145,7 @@
    * https://github.com/ACking-you/byte_douyin_project
    * https://github.com/Henrik-Yao/douyin
 
-   如果不知道如何开始，也可参考已经实现好的user部分。
+   如果不知道如何开始，也可参考已经实现好的user和publish部分。
 
 5. 其他注意事项
 
@@ -170,19 +170,16 @@
    
      ```
      //方法1：从token中解析出id，解析的步骤已经在中间件中写好，直接调用get方法即可
-     idToken, ok := c.Get("user_id")
-     // 根据ok判断是否合法
-     id, err := idToken.(uint)
-     // 判断err
+     idToken, _ := c.Get("user_id")
+     id, _ := idToken.(uint)
      ```
    
-     部分接口传入的参数有user_id，此时可以直接使用`c.Query("user_id")`：
+     部分接口传入的参数有user_id，此时可以使用`c.Query("user_id")`：
    
      ```
      //方法2：如果传入了user_id参数，可以直接调用query方法得到id
      idStr := c.Query("user_id")
-     id, err := strconv.ParseUint(idStr, 10, 64)
-     // 判断err
+     id, _ := strconv.ParseUint(idStr, 10, 64)
      // 注意此时id的类型为uint64，可能需要强制转换为uint再使用
      ```
    

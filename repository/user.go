@@ -38,22 +38,16 @@ func InsertNewUser(u *User) error {
 	return nil
 }
 
-func GetIdByName(name string) (uint, error) {
-	var userId = &User{}
-	err := DB.Model(User{}).Where("name=?", name).First(&userId).Error
-	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return 0, err
-	}
-	return userId.ID, nil
+func GetIdByName(name string) uint {
+	var user = &User{}
+	DB.Model(User{}).Where("name=?", name).First(&user)
+	return user.ID
 }
 
-func GetNameById(id uint) (string, error) {
-	var userName = &User{}
-	err := DB.Model(User{}).Where("id=?", id).First(&userName).Error
-	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return "", err
-	}
-	return userName.Name, nil
+func GetNameById(id uint) string {
+	var user = &User{}
+	DB.Model(User{}).Where("id=?", id).First(&user)
+	return user.Name
 }
 
 func GetPassByName(name string) (string, error) {

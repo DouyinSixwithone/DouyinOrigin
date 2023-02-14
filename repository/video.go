@@ -19,3 +19,9 @@ func InsertNewVideo(v *Video) error {
 	}
 	return nil
 }
+
+func GetVideoList(id uint) []Video {
+	var videoList []Video
+	DB.Model(Video{}).Where("author_id=?", id).Find(&videoList)
+	return videoList
+}
