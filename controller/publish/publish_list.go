@@ -3,7 +3,6 @@ package publish
 import (
 	"Douyin/common"
 	"Douyin/service/publish"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -32,7 +31,7 @@ func List(c *gin.Context) {
 
 	//调用query方法得到要查询的用户id
 	idStr := c.Query("user_id")
-	userId, err := strconv.ParseUint(idStr, 10, 64)
+	userId, err := strconv.ParseUint(idStr, 10, 32)
 	if err != nil {
 		c.JSON(http.StatusOK, ListResponse{
 			Response: common.Response{
@@ -59,5 +58,4 @@ func List(c *gin.Context) {
 		Response: common.Response{StatusCode: 0},
 		List:     publishList,
 	})
-	fmt.Printf("%v\n", publishList)
 }

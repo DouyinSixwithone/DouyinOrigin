@@ -28,7 +28,7 @@ func checkUserInfo(userId uint, followerId uint) error {
 	if !repository.IsUserExistById(userId) {
 		return errors.New(fmt.Sprintf("user(id=%v) doesn't exist", userId))
 	}
-	if !repository.IsUserExistById(followerId) && followerId != 0 {
+	if followerId != 0 && !repository.IsUserExistById(followerId) {
 		return errors.New(fmt.Sprintf("user(id=%v) doesn't exist", followerId))
 	}
 	return nil
