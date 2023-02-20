@@ -23,15 +23,15 @@ func InsertNewVideo(v *Video) error {
 	return nil
 }
 
-func GetVideoList(id uint) []Video {
+func GetVideoListByUserId(id uint) []Video {
 	var videoList []Video
 	DB.Model(Video{}).Where("author_id=?", id).Find(&videoList)
 	return videoList
 }
 
-func GetVideoListByTime(strTime time.Time) []Video {
+func GetVideoListByTime(inputTime time.Time) []Video {
 	var videoList []Video
-	DB.Model(Video{}).Where("created_at < ?", strTime).Order("created_at desc").Find(&videoList)
+	DB.Model(Video{}).Where("created_at < ?", inputTime).Order("created_at desc").Find(&videoList)
 	return videoList
 }
 
@@ -39,4 +39,11 @@ func GetVideoById(id uint) Video {
 	var video Video
 	DB.Model(Video{}).Where("id = ?", id).First(&video)
 	return video
+}
+
+// GetWorkCountByUserId 根据用户id查询他发布了多少视频
+func GetWorkCountByUserId(id uint) uint {
+	var cnt int64
+	DB.Model(Video{}).Where("author_id = ?", id).Count(&cnt)
+	return uint(cnt)
 }

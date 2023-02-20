@@ -58,7 +58,7 @@ func List(c *gin.Context) {
 		c.JSON(http.StatusOK, ListResponse{
 			Response:  common.Response{StatusCode: 0}, //成功
 			VideoList: feedList,
-			NextTime:  int64(newTime),
+			NextTime:  newTime,
 		})
 	} else {
 		c.JSON(http.StatusOK, ListResponse{

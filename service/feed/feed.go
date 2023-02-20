@@ -24,27 +24,20 @@ func GetFeedList(guestId uint, lastTime int64) ([]common.Video, int64) {
 		feedUser, _ := user.GetUserInfo(x.AuthorId, guestId)
 		tmp.Author = feedUser
 
-		tmp.FavoriteCount = repository.GetFavoriteCountById(tmp.Id)
+		tmp.FavoriteCount = repository.GetFavoritedCountByVideoId(tmp.Id)
 		tmp.CommentCount = repository.GetCommentCountById(tmp.Id)
 		tmp.IsFavorite = repository.IsBFavoriteA(tmp.Id, guestId)
 
 		feedVideoList = append(feedVideoList, tmp)
-		newTime = x.CreatedAt.Unix()
+		newTime = x.CreatedAt.Unix() * 1000
 	}
 	return feedVideoList, newTime
 }
 
 func FeedGet(lastTime int64) []repository.Video {
-	var strTime time.Time
-	if lastTime == 1676733878 {
-		strTime = time.Now()
-	} else {
-		strTime = time.Unix(lastTime/1000, 0)
-	}
 
-	// strTime := fmt.Sprint(time.Unix(lastTime, 0).Format("2006-01-02 15:04:05"))
-	fmt.Println("查询到的时间", strTime)
-
-	var videoList = repository.GetVideoListByTime(strTime)
+	inputTime := time.Unix(lastTime/1000, 0)
+	fmt.Println("查询到的时间", inputTime)
+	var videoList = repository.GetVideoListByTime(inputTime)
 	return videoList
 }

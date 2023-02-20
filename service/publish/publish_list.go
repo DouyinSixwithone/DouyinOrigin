@@ -14,7 +14,7 @@ func GetPublishList(userId uint, guestId uint) ([]common.Video, error) {
 		return nil, err
 	}
 	//2. 查询userId发布的所有视频
-	videoList := repository.GetVideoList(userId)
+	videoList := repository.GetVideoListByUserId(userId)
 	//3.组装成合适的格式并返回
 	var publishList []common.Video
 	for i := 0; i < len(videoList); i++ {
@@ -23,7 +23,7 @@ func GetPublishList(userId uint, guestId uint) ([]common.Video, error) {
 			Author:        author,
 			PlayUrl:       videoList[i].PlayUrl,
 			CoverUrl:      videoList[i].CoverUrl,
-			FavoriteCount: repository.GetFavoriteCountById(videoList[i].ID),
+			FavoriteCount: repository.GetFavoritedCountByVideoId(videoList[i].ID),
 			CommentCount:  repository.GetCommentCountById(videoList[i].ID),
 			IsFavorite:    repository.IsBFavoriteA(videoList[i].ID, guestId),
 			Title:         videoList[i].Title,

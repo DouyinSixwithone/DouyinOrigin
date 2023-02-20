@@ -8,11 +8,17 @@ type Response struct {
 }
 
 type User struct {
-	Id            uint   `json:"id,omitempty"`
-	Name          string `json:"name,omitempty"`
-	FollowCount   uint   `json:"follow_count,omitempty"`
-	FollowerCount uint   `json:"follower_count,omitempty"`
-	IsFollow      bool   `json:"is_follow,omitempty"`
+	Id              uint   `json:"id,omitempty"`
+	Name            string `json:"name,omitempty"`
+	FollowCount     uint   `json:"follow_count,omitempty"`
+	FollowerCount   uint   `json:"follower_count,omitempty"`
+	IsFollow        bool   `json:"is_follow,omitempty"`
+	Avatar          string `json:"avatar,omitempty"`
+	BackgroundImage string `json:"background_image,omitempty"`
+	Signature       string `json:"signature,omitempty"`
+	TotalFavorited  uint   `json:"total_favorited,omitempty"`
+	WorkCount       uint   `json:"work_count,omitempty"`
+	FavoriteCount   uint   `json:"favorite_count,omitempty"`
 }
 
 type Video struct {

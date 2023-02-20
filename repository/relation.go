@@ -19,10 +19,7 @@ func GetFollowerCountById(id uint) uint {
 
 // IsBFollowA 用户B是否关注用户A
 func IsBFollowA(idA uint, idB uint) bool {
-	if idA == idB {
-		return false
-	}
-	if idB == 0 {
+	if idA == idB || idB == 0 {
 		return false
 	}
 	// 未完善

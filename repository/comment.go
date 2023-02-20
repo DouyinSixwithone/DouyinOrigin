@@ -11,6 +11,7 @@ type Comment struct {
 	Content string
 }
 
+// GetCommentCountById 通过视频id查询评论的数量
 func GetCommentCountById(id uint) uint {
 	return 0
 }
