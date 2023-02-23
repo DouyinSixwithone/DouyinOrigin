@@ -3,12 +3,9 @@ package comment
 import (
 	"Douyin/common"
 	"Douyin/service/comment"
-	"Douyin/service/user"
+	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
-	"time"
-
-	"github.com/gin-gonic/gin"
 )
 
 type ActionResponse struct {
@@ -27,7 +24,7 @@ func Action(c *gin.Context) {
 	idToken, _ := c.Get("user_id")
 	userId, ok := idToken.(uint)
 	if !ok {
-		c.JSON(http.StatusOK, ListResponse{
+		c.JSON(http.StatusOK, ActionResponse{
 			Response: common.Response{
 				StatusCode: 1,
 				StatusMsg:  "invalid user id",
@@ -39,7 +36,7 @@ func Action(c *gin.Context) {
 	var strVideoId = c.Query("video_id")
 	videoId, err := strconv.ParseUint(strVideoId, 10, 64)
 	if err != nil {
-		c.JSON(http.StatusOK, ListResponse{
+		c.JSON(http.StatusOK, ActionResponse{
 			Response: common.Response{
 				StatusCode: 1,
 				StatusMsg:  err.Error(),
@@ -51,7 +48,7 @@ func Action(c *gin.Context) {
 	var strActionType = c.Query("action_type")
 	actionType, err := strconv.ParseUint(strActionType, 10, 64)
 	if err != nil {
-		c.JSON(http.StatusOK, ListResponse{
+		c.JSON(http.StatusOK, ActionResponse{
 			Response: common.Response{
 				StatusCode: 1,
 				StatusMsg:  err.Error(),
@@ -60,30 +57,28 @@ func Action(c *gin.Context) {
 		return
 	}
 	if actionType == 1 {
-		content := c.Query("content_text")
-		var sendComment comment.Comment
-		sendComment.UserId = userId
-		sendComment.VideoId = videoId
-		sendComment.Content = content
-		sendComment.CreateDate = time.Now().Format("2006-01-02 15:04:05")
-		_, err := comment.Send(sendComment)
+		content := c.Query("comment_text")
+		newComment, err := comment.Send(userId, uint(videoId), content)
 		if err != nil {
-			c.JSON(http.StatusBadRequest, common.Response{
-				StatusCode: 1,
-				StatusMsg:  err.Error(),
+			c.JSON(http.StatusOK, ActionResponse{
+				Response: common.Response{
+					StatusCode: 1,
+					StatusMsg:  err.Error(),
+				},
 			})
 			return
-		} else {
-			c.JSON(http.StatusOK, common.Response{
+		}
+		c.JSON(http.StatusOK, ActionResponse{
+			Response: common.Response{
 				StatusCode: 0,
-				StatusMsg:  "success!",
-			})
-			return
-		}
+				StatusMsg:  "add comment successfully",
+			},
+			Comment: newComment,
+		})
 	} else {
-		commentId, err := strconv.ParseInt(c.Query("comment_id"), 10, 64)
+		commentId, err := strconv.ParseUint(c.Query("comment_id"), 10, 64)
 		if err != nil {
-			c.JSON(http.StatusOK, ListResponse{
+			c.JSON(http.StatusOK, ActionResponse{
 				Response: common.Response{
 					StatusCode: 1,
 					StatusMsg:  err.Error(),
@@ -91,23 +86,22 @@ func Action(c *gin.Context) {
 			})
 			return
 		}
-		err = comment.Delete(commentId)
+		err = comment.Delete(uint(commentId))
 		if err != nil {
-			c.JSON(http.StatusOK, ListResponse{
+			c.JSON(http.StatusOK, ActionResponse{
 				Response: common.Response{
 					StatusCode: 1,
 					StatusMsg:  err.Error(),
 				},
 			})
 			return
-		} else {
-			c.JSON(http.StatusOK, ListResponse{
-				Response: common.Response{
-					StatusCode: 0,
-					StatusMsg:  "delete successfully",
-				},
-			})
 		}
+		c.JSON(http.StatusOK, ActionResponse{
+			Response: common.Response{
+				StatusCode: 0,
+				StatusMsg:  "delete successfully",
+			},
+		})
 	}
 }
 
@@ -123,7 +117,7 @@ func List(c *gin.Context) {
 		return
 	}
 	//调用service层评论函数
-	commentList, err := comment.GetList(videoId)
+	commentList, err := comment.GetList(uint(videoId))
 	if err != nil {
 		c.JSON(http.StatusOK, ListResponse{
 			Response: common.Response{
@@ -133,21 +127,12 @@ func List(c *gin.Context) {
 		})
 		return
 	}
-	var idx = 0
-	var List []common.Comment
-	for _, comment := range commentList {
-		List[idx].Id = comment.ID
-		List[idx].Content = comment.Content
-		List[idx].CreateDate = comment.CreateDate
-		List[idx].User, _ = user.GetUserInfo(comment.UserId, comment.UserId)
-		idx = idx + 1
-	}
 	c.JSON(http.StatusOK, ListResponse{
 		Response: common.Response{
 			StatusCode: 0,
 			StatusMsg:  "查表成功！",
 		},
-		CommentList: List,
+		CommentList: commentList,
 	})
 	return
 }

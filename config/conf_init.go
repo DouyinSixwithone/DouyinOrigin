@@ -17,15 +17,8 @@ type Mysql struct {
 	Loc       string `yaml:"loc"`
 }
 
-type Redis struct {
-	Host string `yaml:"host"`
-	Port int    `yaml:"port"`
-	Pass string `yaml:"pass"`
-}
-
 type Yaml2Go struct {
 	Mysql  Mysql  `yaml:"mysql"`
-	Redis  Redis  `yaml:"redis"`
 	Ip     string `yaml:"ip"`
 	Ffmpeg string `yaml:"ffmpeg"`
 }

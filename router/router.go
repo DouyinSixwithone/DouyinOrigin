@@ -4,9 +4,7 @@ import (
 	"Douyin/controller/comment"
 	"Douyin/controller/favorite"
 	"Douyin/controller/feed"
-	"Douyin/controller/message"
 	"Douyin/controller/publish"
-	"Douyin/controller/relation"
 	"Douyin/controller/user"
 	"Douyin/middleware/jwt"
 
@@ -33,11 +31,4 @@ func Init(r *gin.Engine) {
 	apiRouter.POST("/comment/action/", jwt.AuthWithLogin(), comment.Action)
 	apiRouter.GET("/comment/list/", jwt.AuthWithoutLogin(), comment.List)
 
-	// extra apis - II
-	apiRouter.POST("/relation/action/", jwt.AuthWithLogin(), relation.Action)
-	apiRouter.GET("/relation/follow/list/", jwt.AuthWithLogin(), relation.FollowList)
-	apiRouter.GET("/relation/follower/list/", jwt.AuthWithLogin(), relation.FollowerList)
-	apiRouter.GET("/relation/friend/list/", jwt.AuthWithLogin(), relation.FriendList)
-	apiRouter.GET("/message/chat/", jwt.AuthWithLogin(), message.Chat)
-	apiRouter.POST("/message/action/", jwt.AuthWithLogin(), message.Action)
 }

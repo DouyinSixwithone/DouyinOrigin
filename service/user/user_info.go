@@ -15,15 +15,12 @@ func GetUserInfo(userId uint, followerId uint) (common.User, error) {
 		return common.User{}, err
 	}
 	// 2. 获取信息并返回
-	fmt.Println("TotalFavorited", repository.GetTotalFavoritedByUserId(userId))
-	fmt.Println("WorkCount", repository.GetWorkCountByUserId(userId))
-	fmt.Println("FavoriteCount", repository.GetFavoriteCountByUserId(userId))
 	return common.User{
 		Id:              userId,
 		Name:            repository.GetNameById(userId),
-		FollowCount:     repository.GetFollowCountById(userId),
-		FollowerCount:   repository.GetFollowerCountById(userId),
-		IsFollow:        repository.IsBFollowA(userId, followerId),
+		FollowCount:     0,
+		FollowerCount:   0,
+		IsFollow:        false,
 		Avatar:          "",
 		BackgroundImage: "",
 		Signature:       "",

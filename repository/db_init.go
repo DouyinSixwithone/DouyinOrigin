@@ -23,7 +23,7 @@ func Init() error {
 	}
 
 	// 自动建表
-	if err = DB.AutoMigrate(User{}, Video{}, Comment{}, Favorite{}, Relation{}, Message{}); err != nil {
+	if err = DB.AutoMigrate(User{}, Video{}, Comment{}, Favorite{}); err != nil {
 		return err
 	}
 	return nil

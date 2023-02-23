@@ -21,11 +21,9 @@ func Action(c *gin.Context) {
 	idToken, _ := c.Get("user_id")
 	userId, ok := idToken.(uint)
 	if !ok {
-		c.JSON(http.StatusOK, ListResponse{
-			Response: common.Response{
-				StatusCode: 1,
-				StatusMsg:  "invalid user id",
-			},
+		c.JSON(http.StatusOK, common.Response{
+			StatusCode: 1,
+			StatusMsg:  "invalid user id",
 		})
 		return
 	}
@@ -33,11 +31,9 @@ func Action(c *gin.Context) {
 	var strActionType = c.Query("action_type")
 	actionType, err := strconv.ParseUint(strActionType, 10, 64)
 	if err != nil {
-		c.JSON(http.StatusOK, ListResponse{
-			Response: common.Response{
-				StatusCode: 1,
-				StatusMsg:  err.Error(),
-			},
+		c.JSON(http.StatusOK, common.Response{
+			StatusCode: 1,
+			StatusMsg:  err.Error(),
 		})
 		return
 	}
@@ -45,11 +41,9 @@ func Action(c *gin.Context) {
 	var strVideoId = c.Query("video_id")
 	VideoId, err := strconv.ParseUint(strVideoId, 10, 64)
 	if err != nil {
-		c.JSON(http.StatusOK, ListResponse{
-			Response: common.Response{
-				StatusCode: 1,
-				StatusMsg:  err.Error(),
-			},
+		c.JSON(http.StatusOK, common.Response{
+			StatusCode: 1,
+			StatusMsg:  err.Error(),
 		})
 		return
 	}

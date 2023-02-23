@@ -18,7 +18,7 @@
 |     姓名     |                    分工                    |        进度        |
 | :----------: | :----------------------------------------: | :----------------: |
 | 胡杨（队长） |     Github仓库管理，feed和favorite接口     | 已完成，未严格测试 |
-|    周恋程    | 项目架构搭建，user和publish接口，jwt中间件 | 已完成，未严格测试 |
+|    周恋程    | 项目架构搭建，user和publish接口，中间件 | 已完成，未严格测试 |
 |    陈博宇    |                comment接口                 |      尚未开始      |
 
 ### 三. 开发环境配置
@@ -29,13 +29,11 @@
 
    - Mysql 8.0
 
-   - Redis 5.0.14
-
    以上环境的安装教程百度即可。
 
 2. 根据自己的环境修改`DouyinOrigin/config/config.yaml`中的内容，需要修改数据库的用户名和密码，本机ip地址，ffmpeg.exe的绝对路径。
 
-   完成以上步骤并确保mysql中存在名为douyin的数据库，在终端输入`go run main.go msgServer.go`即可自动下载依赖并运行。
+   完成以上步骤并确保mysql中存在名为douyin的数据库，在终端输入`go run main.go`即可自动下载依赖并运行。
 
 3. 使用安卓模拟器或安卓手机进行测试，[可以参考这篇文章](https://juejin.cn/post/7192600701745233979)。
 
@@ -92,7 +90,6 @@
    * 数据库：Mysql
 
    * 其他
-     * Redis：缓存
      * jwt：生成token、鉴权
      * bcrypt：对输入的password进行加密，数据库中存储加密后的密码
      * ffmpeg：截取视频的一帧作为封面
@@ -130,12 +127,10 @@
    ├── /repository/ 数据层
    ├── /middleware/ 中间件
    │   ├── jwt/ 鉴权
-   │   ├── jwt/ 鉴权
-   │   └── redis/ 缓存
+   │   └── ffmpeg/ 截取视频第一帧
    ├── /router/ 路由配置
    ├── /data/ 上传的视频文件存储在本地的路径，若不存在会自动创建
    ├── /go.mod/
-   ├── msgServer.go  demo中提供的消息服务，不太清楚怎么用
    ├── main.go  程序入口
    └── README.md
    ```

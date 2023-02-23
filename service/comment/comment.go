@@ -1,38 +1,32 @@
 package comment
 
 import (
+	"Douyin/common"
 	"Douyin/repository"
-
-	"gorm.io/gorm"
+	"Douyin/service/user"
 )
 
-type Comment struct {
-	gorm.Model
-	UserId     uint
-	VideoId    uint64
-	Content    string
-	CreateDate string
-}
-
-func CountFromVideoId(videoId uint) uint {
-	cnt := repository.GetCommentCountById(videoId)
-	return cnt
-}
-
-func Send(comment Comment) (repository.Comment, error) {
-	var commentInfo repository.Comment
-	commentInfo.VideoId = comment.VideoId       //评论视频id传入
-	commentInfo.UserId = comment.UserId         //评论用户id传入
-	commentInfo.Content = comment.Content       //评论内容传入
-	commentInfo.CreateDate = comment.CreateDate //评论时间
-	commentRtn, err := repository.InsertComment(commentInfo)
-	if err != nil {
-		return repository.Comment{}, err
+func Send(userId uint, videoId uint, content string) (common.Comment, error) {
+	newComment := repository.Comment{
+		UserId:  userId,
+		VideoId: videoId,
+		Content: content,
 	}
-	return commentRtn, nil
+	err := repository.InsertComment(&newComment)
+	if err != nil {
+		return common.Comment{}, err
+	}
+	u, _ := user.GetUserInfo(userId, userId)
+	retComment := common.Comment{
+		Id:         newComment.ID,
+		User:       u,
+		Content:    content,
+		CreateDate: newComment.CreatedAt.Format("01-02"),
+	}
+	return retComment, nil
 }
 
-func Delete(id int64) error {
+func Delete(id uint) error {
 	err := repository.DeleteComment(id)
 	if err != nil {
 		return err
@@ -40,6 +34,24 @@ func Delete(id int64) error {
 	return nil
 }
 
-func GetList(videoId int64) ([]repository.Comment, error) {
-	return repository.GetCommentList(videoId)
+func GetList(videoId uint) ([]common.Comment, error) {
+	commentList, err := repository.GetCommentList(videoId)
+	if err != nil {
+		return nil, err
+	}
+	var retList []common.Comment
+	for _, x := range commentList {
+		u, err := user.GetUserInfo(x.UserId, x.UserId)
+		if err != nil {
+			return nil, err
+		}
+		comment := common.Comment{
+			Id:         x.ID,
+			User:       u,
+			Content:    x.Content,
+			CreateDate: x.CreatedAt.Format("01-02"),
+		}
+		retList = append(retList, comment)
+	}
+	return retList, nil
 }
