@@ -1,6 +1,6 @@
 mysql:
   user: root
-  pass: zlc020706
+  pass: qwerqwer1214
   host: 127.0.0.1
   port: 3306
   dbname: douyin
@@ -13,6 +13,6 @@ redis:
   port : 6379
   pass :
 
-ip : 10.133.152.165
+ip : 222.20.100.159
 
 ffmpeg : C:\Users\lc\Desktop\DouyinOrigin\middleware\ffmpeg\ffmpeg.exe

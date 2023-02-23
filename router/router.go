@@ -9,6 +9,7 @@ import (
 	"Douyin/controller/relation"
 	"Douyin/controller/user"
 	"Douyin/middleware/jwt"
+
 	"github.com/gin-gonic/gin"
 )
 

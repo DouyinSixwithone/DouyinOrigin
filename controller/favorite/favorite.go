@@ -3,9 +3,10 @@ package favorite
 import (
 	"Douyin/common"
 	"Douyin/service/favorite"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 type ListResponse struct {
