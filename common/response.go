@@ -1,6 +1,6 @@
 package common
 
-// 返回响应时需要用到的结构体，为demo自带，不需要修改
+// 返回响应时需要用到的结构体
 
 type Response struct {
 	StatusCode int32  `json:"status_code"`
@@ -37,21 +37,4 @@ type Comment struct {
 	User       User   `json:"user"`
 	Content    string `json:"content,omitempty"`
 	CreateDate string `json:"create_date,omitempty"`
-}
-
-type Message struct {
-	Id         uint   `json:"id,omitempty"`
-	Content    string `json:"content,omitempty"`
-	CreateTime string `json:"create_time,omitempty"`
-}
-
-type MessageSendEvent struct {
-	UserId     uint   `json:"user_id,omitempty"`
-	ToUserId   uint   `json:"to_user_id,omitempty"`
-	MsgContent string `json:"msg_content,omitempty"`
-}
-
-type MessagePushEvent struct {
-	FromUserId uint   `json:"user_id,omitempty"`
-	MsgContent string `json:"msg_content,omitempty"`
 }
