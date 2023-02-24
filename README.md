@@ -9,9 +9,9 @@
 - [抖音项目方案说明](https://bytedance.feishu.cn/docs/doccnKrCsU5Iac6eftnFBdsXTof)
 - [接口说明文档](https://www.apifox.cn/apidoc/shared-09d88f32-0b6c-4157-9d07-a36d32d7a75c/api-50707523)
 - [极简抖音App使用说明](https://bytedance.feishu.cn/docs/doccnM9KkBAdyDhg8qaeGlIz7S7)
-- [答辩汇报文档模板](https://bytedance.feishu.cn/docx/ML16dUoW9o4hqkxfeWEcgr1onEb)
 - [服务端Demo仓库地址](https://github.com/RaymondCode/simple-demo)
 - [本项目仓库地址](https://github.com/DouyinSixwithone/DouyinOrigin)
+- [答辩汇报文档](https://hitsz.feishu.cn/docx/U3R5denTVo1yBExY4FTcETx7nmh)
 
 ### 二. 小组成员及分工
 
